@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Payment Test</title>
+  </head>
+  <body>
+    <h1>Test Payment Route</h1>
+    <form id="payment-form">
+      <label for="email">Email:</label>
+      <input type="email" id="email" name="email" required />
+      <br /><br />
+      <label for="currency">Currency:</label>
+      <input type="text" id="currency" name="currency" value="usd" required />
+      <br /><br />
+      <label for="amount">Amount (in cents):</label>
+      <input type="number" id="amount" name="amount" required />
+      <br /><br />
+      <button type="submit">Create Payment</button>
+    </form>
+
+    <div id="result"></div>
+
+    <script>
+      const form = document.getElementById('payment-form');
+      form.addEventListener('submit', async (event) => {
+        event.preventDefault();
+
+        const email = document.getElementById('email').value;
+        const currency = document.getElementById('currency').value;
+        const amount = document.getElementById('amount').value;
+
+        const response = await fetch('/user/create-payment', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ email, currency, amount }),
+        });
+
+        const result = await response.json();
+        document.getElementById('result').textContent = result.error
+          ? `Error: ${result.error}`
+          : `Client Secret: ${result.clientSecret}`;
+      });
+    </script>
+  </body>
+</html>
